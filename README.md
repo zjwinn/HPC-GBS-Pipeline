@@ -75,6 +75,9 @@ ncores="40"
 disc_and_prod="true"
 filter="true"
 impute="true"
+
+# Report current working directory
+script_dir="/home/zachary.winn/guedira_seq_map/zjwinn_working_directory/HPC-GBS-Pipeline"
 ```
 ### work_dir
 
@@ -123,3 +126,5 @@ This is the true path to a reference genome (e.g., [Chinese Spring Wheat RefSeq 
 ### filter="true"
 
 ### impute="true"
+
+### script_dir
