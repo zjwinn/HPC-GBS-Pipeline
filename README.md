@@ -30,4 +30,26 @@ The pipeline is currently set up to be run on the [Atlas HPC](https://www.hpc.ms
 
 ## Modifying the Header of the .slurm Script
 
-The main script used in this pipeline is `atlas_gbs_pipeline.slurm`
+The main script used in this pipeline is [atlas_tassel_pipeline.slurm](https://github.com/zjwinn/HPC-GBS-Pipeline/blob/main/atlas_tassel_pipeline.slurm). The header of this script is formatted to the system specifications of atlas and looks like the following
+
+```bash
+#!/bin/bash
+#SBATCH --job-name="tassel_pl"                   
+#SBATCH --qos=normal
+#SBATCH -p atlas                                 
+#SBATCH -A guedira_seq_map                       
+#SBATCH -N 1                                      
+#SBATCH -n 48                                     
+#SBATCH -t 7-00:00:00                             
+#SBATCH --mail-user=YOUR.EMAIL@YOUR.DOMAIN.com                                    
+#SBATCH --mail-type=END                           
+#SBATCH --mail-type=FAIL                          
+#SBATCH -o "stdout.%x.%j.%N"                      
+#SBATCH -e "stderr.%x.%j.%N"   
+```
+
+Notice the shbang line at the top denoting that this is a bash script and the following commented information below the shbang line. This information is set to a single standard node on Atlas with 48 cores and 7 days of computation time. If you want more information on available nodes an easy way to generate jobs for atlas [look here](https://www.hpc.msstate.edu/computing/atlas/#ondemand). There may be a point where this script requires greater computational resources and you can look a the previous link to assess your needs. Make sure that when you implement this code that you set the email to your own email!
+
+## Meat and Potatoes of the Script
+
+Here are all the options which require modification in the cript
