@@ -114,7 +114,7 @@ This is the true path to a reference genome (e.g., [Chinese Spring Wheat RefSeq 
 
 ### maf="0.05"
 
-###removechr="UNKNOWN"
+### removechr="UNKNOWN"
 
 ### ncores="40"
 
