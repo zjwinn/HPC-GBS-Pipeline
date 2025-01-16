@@ -1,5 +1,5 @@
-# Ignore tassel
-./tassel-5-standalone/
+# Ignore the tassel-5-standalone directory
+/tassel-5-standalone/
 
-# Ignore any output from atlas
-./std*:
+# Ignore any files starting with 'std' (such as stdout files from SLURM)
+std*
