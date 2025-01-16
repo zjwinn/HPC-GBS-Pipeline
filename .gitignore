@@ -1,5 +1,5 @@
 # Ignore tassel
-./tassel-5-standalone
+./tassel-5-standalone/
 
 # Ignore any output from atlas
 ./std*:

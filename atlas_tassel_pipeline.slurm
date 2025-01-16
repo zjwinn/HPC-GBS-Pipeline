@@ -55,12 +55,17 @@ snphet="0.1"
 maf="0.05"
 removechr="UNKNOWN"
 ncores="40"
-disc_and_prod="true"
-filter="true"
+disc_and_prod="false"
+filter="false"
 impute="true"
 
-# Check for discovery and production
+# Report current working directory
+script_dir="/home/zachary.winn/guedira_seq_map/zjwinn_working_directory/HPC-GBS-Pipeline"
 
+# Echo
+echo "The current directory of this bash script is $script_dir"
+
+# Check for discovery and production
 if [ $disc_and_prod = "true" ]; then
 
     # Source the bash script
@@ -75,6 +80,9 @@ if [ $disc_and_prod = "true" ]; then
                                      	  --run-prod
 
 fi
+
+# Change directory back to this directory
+cd $script_dir
 
 # Check for filter
 if [ $filter = "true" ]; then
@@ -96,6 +104,9 @@ if [ $filter = "true" ]; then
                                     --ncores=$ncores
 
 fi
+
+# Change directory back to this directory
+cd $script_dir
 
 # Check for impute
 if [ $impute = "true" ]; then
