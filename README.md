@@ -52,4 +52,74 @@ Notice the shbang line at the top denoting that this is a bash script and the fo
 
 ## Meat and Potatoes of the Script
 
-Here are all the options which require modification in the cript
+Here are all the options which require modification in the script:
+
+```bash
+# Define necessary variables
+work_dir="/project/90daydata/guedira_seq_map/atlas_gbs_pipeline_test"
+study_name="test_run"
+keyfile="/project/guedira_seq_map/zjwinn_working_directory/HPC-GBS-Pipeline/GAM2023_yr-pop_keyfile.txt"
+fastq_dir="/project/90daydata/guedira_seq_map/Wheat"
+ref_file="/project/90daydata/guedira_seq_map/Refseq2.1_IWGSC/assembly/iwgsc_refseqv2.1_assembly.fa"
+enzymes="PstI-MspI"
+taglength="85"
+ram="300g"
+taxamiss="0.85"
+taxahet="0.3"
+maxdep="100"
+snpmiss="0.50"
+snphet="0.1"
+maf="0.05"
+removechr="UNKNOWN"
+ncores="40"
+disc_and_prod="true"
+filter="true"
+impute="true"
+```
+### work_dir
+
+This option represents the directory where you want all relevant outputs to be written to. Make sure your allotment in those directories are sufficent because discoveries can be quite large.
+
+### study_name
+
+This option denotes what you want the study name to be. ***BE SURE YOU AVOID SPACES!***
+
+### keyfile
+
+This is a tab delimited file with relevant information to the TASSEL pipeline. If you are unfamiliar with this, please refere [here](https://www.maizegenetics.net/copy-of-tassel).
+
+### fastq_dir
+
+This is the directory where all neccesary FASTQ files are located.
+
+### ref_file
+
+This is the true path to a reference genome (e.g., [Chinese Spring Wheat RefSeq Version 2.1](https://urgi.versailles.inrae.fr/download/iwgsc/IWGSC_RefSeq_Assemblies/v2.1/)) and it must be indexed with [bwa](https://bio-bwa.sourceforge.net/). 
+
+### enzymes="PstI-MspI"
+
+### taglength="85"
+
+### ram="300g"
+
+### taxamiss="0.85"
+
+### taxahet="0.3"
+
+### maxdep="100"
+
+### snpmiss="0.50"
+
+### snphet="0.1"
+
+### maf="0.05"
+
+###removechr="UNKNOWN"
+
+### ncores="40"
+
+### disc_and_prod="true"
+
+### filter="true"
+
+### impute="true"
