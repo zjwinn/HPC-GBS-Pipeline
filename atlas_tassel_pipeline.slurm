@@ -57,8 +57,8 @@ snphet="0.1"
 maf="0.05"
 removechr="UNKNOWN"
 ncores="40"
-disc_and_prod="false"
-filter="false"
+disc_and_prod="true"
+filter="true"
 impute="true"
 
 # Check for discovery and production
