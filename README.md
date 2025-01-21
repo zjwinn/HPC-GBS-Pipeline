@@ -101,30 +101,60 @@ This is the true path to a reference genome (e.g., [Chinese Spring Wheat RefSeq 
 
 ### enzymes="PstI-MspI"
 
+This is the type of enzyme used to digest the DNA before ligation to adaptors in sequencing. This enzyme is specific to GBS for wheat. Please make sure this restriction enzyme is correct.
+
 ### taglength="85"
+
+This is the minimum length of a read to be considered for alignment. The default for TASSEL is 65, however the regional genotyping lab has elevated this to improve read alignment.
 
 ### ram="300g"
 
+This is an added option to specify the maximum RAM available on the computing node. Make sure to alter to fit node specifications and potential RAM requirments.
+
 ### taxamiss="0.85"
+
+The total missing data allowed for a single taxa (sample). 
 
 ### taxahet="0.3"
 
+The total heterozygosity allowed for a single taxa (sample).
+
 ### maxdep="100"
+
+The maximum read depth for a SNP in the filtered VCF.
 
 ### snpmiss="0.50"
 
+The maximum amount of missing data allowed for a SNP in a filtered VCF.
+
 ### snphet="0.1"
+
+The maximum amount of heterozygosity allowed for a SNP in a filtered VCF.
 
 ### maf="0.05"
 
+The minimum allele frequency per SNP in a filtered VCF.
+
 ### removechr="UNKNOWN"
+
+The chromosome to filter out of a filtered VCF.
 
 ### ncores="40"
 
+The total number of cores available on the computing node.
+
 ### disc_and_prod="true"
+
+A logical argument to perform discovery and production. Set to true to perform discovery and production.
 
 ### filter="true"
 
+A logical argument to perform filtration. Set to true to perform filtration on a produced VCF.
+
 ### impute="true"
 
+A logical argument to perform imputation. Set to true to perform imputation of a filtered VCF.
+
 ### script_dir
+
+This is the directory of the git repository. Set this manually every time you run this pipeline!
