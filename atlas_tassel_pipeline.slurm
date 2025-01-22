@@ -25,7 +25,7 @@ module load bzip2
 # Directory and file names
 directory="tassel-5-standalone"
 run_script="tassel-5-standalone/run_pipeline.pl"
-repo_url="https://bitbucket.org/tasseladmin/tassel-5-standalone.git"
+repo_url="https://bitbucket.org/tasseladmin/tassel-5-standalone.git" # Hopefully this stays consistent... Maybe check if this is not correct!
 
 # Check if the directory exists in the current working directory
 if [ ! -d "$directory" ]; then
@@ -39,45 +39,92 @@ fi
 export TASSEL_PL=$(realpath "$run_script")
 
 # Define necessary variables
-work_dir="/project/90daydata/guedira_seq_map/atlas_gbs_pipeline_test"
-study_name="test_run"
-keyfile="/project/guedira_seq_map/zjwinn_working_directory/HPC-GBS-Pipeline/softWheat_test_discovery_22991.txt"
-fastq_dir="/project/90daydata/guedira_seq_map/Wheat"
-ref_file="/project/90daydata/guedira_seq_map/Refseq2.1_IWGSC/assembly/iwgsc_refseqv2.1_assembly.fa"
-enzymes="PstI-MspI"
-taglength="85"
-ram="300g"
-taxamiss="0.85"
-taxahet="0.3"
-maxdep="100"
-snpmiss="0.50"
-snphet="0.1"
-maf="0.05"
-removechr="UNKNOWN"
-ncores="40"
-disc_and_prod="true"
-filter="true"
-impute="true"
+work_dir="/project/90daydata/guedira_seq_map/atlas_gbs_pipeline_test" ## Where the pipeline directory will be made
+study_name="test_run" ## The name of the project which will be named 
+database="" ## This is a path to an existing database, leave blank if discovering and producing in the same run
+keyfile="/project/guedira_seq_map/zjwinn_working_directory/HPC-GBS-Pipeline/softWheat_test_discovery_22991.txt" ## This is the path to the keyfile
+fastq_dir="/project/90daydata/guedira_seq_map/Wheat" ## This is the path to the fastq files
+ref_file="/project/90daydata/guedira_seq_map/Refseq2.1_IWGSC/assembly/iwgsc_refseqv2.1_assembly.fa" ## This is the path to the BWA indexed genome
+enzymes="PstI-MspI" ## This is enzymes used for the pipeline (usually leave alone)
+taglength="85" ## This is the minimum length of a read (usually leave alone)
+ram="300g" ## This is the amount of RAM (edit if you need more and change nodes)
+taxamiss="0.85" ## Maximum missing data in a line
+taxahet="0.3" ## Maximum heterozygosity in a line
+maxdep="100" ## Maximum depth per SNP
+snpmiss="0.50" ## Maximum missing data per SNP
+snphet="0.1" ## Maximum heterozygosity per SNP
+maf="0.05" ## Minimum allele frequency per SNP
+removechr="UNKNOWN" ## Chromosome to remove (usually leave alone)
+ncores="40" ## Number of cores for parallele processing (edit if you need more and change nodes)
+discovery="true" ## Logical to perform discovery
+production="true" ## Logical to perform production
+filter="true" ## Logical to perform filter
+impute="true" ## Logical to do imputation
 
 # Report current working directory
+# Note: make sure to set this every time to the scripts working directory!
 script_dir="/home/zachary.winn/guedira_seq_map/zjwinn_working_directory/HPC-GBS-Pipeline"
 
 # Echo
 echo "The current directory of this bash script is $script_dir"
 
-# Check for discovery and production
-if [ $disc_and_prod = "true" ]; then
+# Validate required files and directories
+if [ ! -f "$keyfile" ]; then
+    echo "Error: Keyfile not found at $keyfile. Exiting."
+    exit 1
+fi
+if [ ! -f "$ref_file" ]; then
+    echo "Error: Reference file not found at $ref_file. Exiting."
+    exit 1
+fi
+if [ ! -d "$fastq_dir" ]; then
+    echo "Error: FASTQ directory not found at $fastq_dir. Exiting."
+    exit 1
+fi
+if [ ! -d "$work_dir" ]; then
+    echo "Error: working directory not found at $work_dir. Exiting"
+    exit 1
+fi
 
-    # Source the bash script
+# Check for discovery and production
+if [ $discovery = "true" ]; then
+
+    # Run discovery
     source ./tassel_disc_plus_prod_bwa.sh --workdir="$work_dir" \
-                                          --study="$study_name" \
-                                     	  --keyfile="$keyfile" \
-                                     	  --fastq="$fastq_dir" \
-                                     	  --ref="$ref_file" \
-                                     	  --enzymes="$enzymes" \
-                                      	  --taglength="$taglength" \
-                                      	  --ram="$ram" \
-                                     	  --run-prod
+                                            --study="$study_name" \
+                                            --keyfile="$keyfile" \
+                                            --fastq="$fastq_dir" \
+                                            --ref="$ref_file" \
+                                            --enzymes="$enzymes" \
+                                            --taglength="$taglength" \
+                                            --ram="$ram"
+
+    # Set discovery location
+    database="$work_dir/database/$study_name.db"
+
+fi
+
+# Change directory back to this directory
+cd $script_dir
+
+if [ $production = "true" ]; then
+
+    # Validate database existence
+    if [ ! -f "$database" ]; then
+        echo "Error: Database not found at $database. Exiting."
+        exit 1
+    fi
+
+    # Run production
+    source ./tassel_production.sh --workdir="$work_dir" \
+                                    --database="$database" \
+                                    --study="$study_name" \
+                                    --keyfile="$keyfile" \
+                                    --fastq="$fastq_dir" \
+                                    --ref="$ref_file" \
+                                    --enzymes="$enzymes" \
+                                    --taglength="$taglength" \
+                                    --ram="$ram"
 
 fi
 
@@ -86,22 +133,22 @@ cd $script_dir
 
 # Check for filter
 if [ $filter = "true" ]; then
-    
+
     # Make directory
     mkdir $work_dir/filt_VCF
 
     # Run filtering
-    source ./vcf_filter_parallel.sh --workdir="${WKDIR}" \
-                                    --vcfin=$work_dir/raw_VCF/${study_name}_production.vcf.gz \
-                                    --vcfout=$work_dir/filt_VCF/${study_name}_production_filt.vcf.gz \
-                                    --taxamiss=$taxamiss \
-                                    --taxahet=$taxahet \
-                                    --maxdep=$maxdep \
-                                    --snpmiss=$snpmiss \
-                                    --snphet=$snphet \
-                                    --maf=$maf \
-                                    --removechr=$removechr \
-                                    --ncores=$ncores
+    source ./vcf_filter_parallel.sh --workdir="$work_dir" \
+                                        --vcfin=$work_dir/raw_VCF/${study_name}_production.vcf.gz \
+                                        --vcfout=$work_dir/filt_VCF/${study_name}_production_filt.vcf.gz \
+                                        --taxamiss=$taxamiss \
+                                        --taxahet=$taxahet \
+                                        --maxdep=$maxdep \
+                                        --snpmiss=$snpmiss \
+                                        --snphet=$snphet \
+                                        --maf=$maf \
+                                        --removechr=$removechr \
+                                        --ncores=$ncores
 
 fi
 
@@ -116,9 +163,22 @@ if [ $impute = "true" ]; then
 
     # Run beagle
     beagle gt=$work_dir/filt_VCF/${study_name}_production_filt.vcf.gz \
-           out=$work_dir/imp_VCF/${study_name}_production_filt_imp \
-           map=./SynOp_RIL906_v1.0_GBS_monotonic.map \
-           nthreads=$ncores \
-           window=205 
+            out=$work_dir/imp_VCF/${study_name}_production_filt_imp \
+            map=./SynOp_RIL906_v1.0_GBS_monotonic.map \
+            nthreads=$ncores \
+            window=205
+
+    # Run final filtering
+    source ./vcf_filter_parallel.sh --workdir="$work_dir" \
+                                        --vcfin=$work_dir/imp_VCF/${study_name}_production_filt_imp.vcf.gz \
+                                        --vcfout=$work_dir/imp_VCF/${study_name}_production_final.vcf.gz \
+                                        --taxamiss=$taxamiss \
+                                        --taxahet=$taxahet \
+                                        --maxdep=$maxdep \
+                                        --snpmiss=$snpmiss \
+                                        --snphet=$snphet \
+                                        --maf=$maf \
+                                        --removechr=$removechr \
+                                        --ncores=$ncores
 
 fi

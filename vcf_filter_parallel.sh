@@ -62,11 +62,11 @@ echo "
 
 REQUIRED ARGUMENTS:
 
---vcfin=<file>     Input VCF file path, relative to workdir or absolute path 
-                   (can be gzipped)
---vcfout=<file>    Output VCF file path, relative to workdir or absolute path 
-                   (output will always be gzipped, or bgzipped and indexed if
-                   bgzip and tabix are installed)
+--vcfin=<file>      Input VCF file path, relative to workdir or absolute path 
+                    (can be gzipped)
+--vcfout=<file>     Output VCF file path, relative to workdir or absolute path 
+                    (output will always be gzipped, or bgzipped and indexed if
+                    bgzip and tabix are installed)
 
 OPTIONAL ARGUMENTS - Directories:
 
@@ -74,23 +74,23 @@ OPTIONAL ARGUMENTS - Directories:
 
 OPTIONAL ARGUMENTS - SNP filtering:
 
-NOTE: Heterozygosity proportions below calculated with respect to NON-MISSING 
-      genotype calls
+NOTE:   Heterozygosity proportions below calculated with respect to NON-MISSING 
+        genotype calls
 
---maf=0          Minimum minor allele frequency. Default value implements no
-                 filtering
---snpmiss=1      Maximum SNPwise missing data proportion. Default value 
-                 implements no filtering.
---snphet=1       Maximum SNPwise heterozygous proportion. Default value 
-                 implements no filtering.
---minbp=0        Minimum physical distance between any two SNPs. Default value 
-                 implements no filtering.
---mindep=0       Minimum average SNP sequence depth. Default value 
-                 implements no filtering.
---maxdep=1e6     Maximum average SNP sequence depth. Default value of 1e6 should
-                 not implement any filtering
---maxld=NA       Maximum pairwise LD between SNPs on each chromosome. 
-                 Default value implements no filtering.
+--maf=0         Minimum minor allele frequency. Default value implements no
+                filtering
+--snpmiss=1     Maximum SNPwise missing data proportion. Default value 
+                implements no filtering.
+--snphet=1      Maximum SNPwise heterozygous proportion. Default value 
+                implements no filtering.
+--minbp=0       Minimum physical distance between any two SNPs. Default value 
+                implements no filtering.
+--mindep=0      Minimum average SNP sequence depth. Default value 
+                implements no filtering.
+--maxdep=1e6    Maximum average SNP sequence depth. Default value of 1e6 should
+                not implement any filtering
+--maxld=NA      Maximum pairwise LD between SNPs on each chromosome. 
+                Default value implements no filtering.
 --removechr=NA   Remove a specific chromosome - default retains all chromosomes
 
 OPTIONAL ARGUMENTS - Taxa filtering:
@@ -116,10 +116,10 @@ DEPENDENCIES:
     1) VCFTools in user's PATH as 'vcftools'
     2) bcftools in user's PATH as 'bcftools'
     2) PLINK 1.9 (or PLINK 2 when it becomes beta) in user's PATH as 'plink2'
-         only required for filtering by LD
+        only required for filtering by LD
     3) TASSEL for generating filtered file statistics - path to run_pipeline.pl
-       is set within script. Script will still create filtered VCF without
-       using TASSEL
+        is set within script. Script will still create filtered VCF without
+        using TASSEL
 "
 exit 1;
 }
@@ -146,8 +146,8 @@ N=2
 
 ## Parse out command-line arguments
 while true; do
-  case "$1" in
-  	-w | --workdir ) workdir="$2"; shift 2;;
+    case "$1" in
+    -w | --workdir ) workdir="$2"; shift 2;;
     -i | --vcfin ) vcfin="$2"; shift 2;;
 	-o | --vcfout ) vcfout="$2"; shift 2;;
     -s | --taxasub ) taxsub="$2"; shift 2;;
@@ -165,7 +165,7 @@ while true; do
     -h | --help ) help;;
     -- ) shift; break;;
     * ) echo "Internal error!" break;;
-  esac
+    esac
 done
 
 ## If user-requested cores exceed the maximum, set to the number of cores to (maximum cores - 1)
@@ -266,20 +266,20 @@ fi
 echo "Filtering by taxa"
 if [[ "$ext" == "gz" ]]; then      
     vcftools --gzvcf "$vcfin" \
-             --keep taxa_keep.txt \
-             --min-alleles 2 \
-             --max-alleles 2 \
-             --remove-indels \
-             --recode \
-			 --out round1
+                --keep taxa_keep.txt \
+                --min-alleles 2 \
+                --max-alleles 2 \
+                --remove-indels \
+                --recode \
+                --out round1
 else
     vcftools --vcf "$vcfin" \
-			 --keep taxa_keep.txt \
-             --min-alleles 2 \
-             --max-alleles 2 \
-             --remove-indels \
-             --recode \
-			 --out round1
+                --keep taxa_keep.txt \
+                --min-alleles 2 \
+                --max-alleles 2 \
+                --remove-indels \
+                --recode \
+                --out round1
 fi
 
 
@@ -304,9 +304,9 @@ GetHetCalls() {
 		## Calculate number of het calls per SNP
 		grep -E "^#|^$chrom" round1.recode.vcf | bcftools query -f '[\S%CHROM\_%POS\n]' -i 'GT="het"' | sort | uniq -c > temp_storage/het_$chrom.txt
 	
-	    ## Join the two files together, inserting 0 for missing vals (should only be
-   		## values from the het file that have missing)
-    	## Format is: SNP_name het_count non-missing_count
+        ## Join the two files together, inserting 0 for missing vals (should only be
+        ## values from the het file that have missing)
+        ## Format is: SNP_name het_count non-missing_count
 		join -a 2 -e 0 -1 2 -2 2 -o 2.2,1.1,2.1 temp_storage/het_$chrom.txt temp_storage/non_miss_$chrom.txt > temp_storage/joined_$chrom.txt
 		
 		## Find SNPs passing the het. threshold
@@ -316,25 +316,25 @@ GetHetCalls() {
 	## Implement filtering of SNPs
 	if [[ "$removechr" == "NA" ]]; then
 		vcftools --vcf round1.recode.vcf \
-		         --snps temp_storage/snps_keep_$chrom.txt \
-		         --maf $maf \
-		         --max-missing $snpmissinv \
-		         --min-meanDP $mindep \
-		         --max-meanDP $maxdep \
-		         --thin $minbp \
-		         --recode \
-		         --out temp_storage/round2_$chrom
+                    --snps temp_storage/snps_keep_$chrom.txt \
+                    -maf $maf \
+                    --max-missing $snpmissinv \
+                    --min-meanDP $mindep \
+                    --max-meanDP $maxdep \
+                    --thin $minbp \
+                    --recode \
+                    --out temp_storage/round2_$chrom
 	else
 		vcftools --vcf round1.recode.vcf \
-		         --snps temp_storage/snps_keep_$chrom.txt \
-		         --maf $maf \
-		         --max-missing $snpmissinv \
-		         --min-meanDP $mindep \
-		         --max-meanDP $maxdep \
-		         --thin $minbp \
-		         --not-chr $removechr \
-		         --recode \
-		         --out temp_storage/round2_$chrom
+                    --snps temp_storage/snps_keep_$chrom.txt \
+                    --maf $maf \
+                    --max-missing $snpmissinv \
+                    --min-meanDP $mindep \
+                    --max-meanDP $maxdep \
+                    --thin $minbp \
+                    --not-chr $removechr \
+                    --recode \
+                    --out temp_storage/round2_$chrom
 	fi
 }
 
@@ -364,17 +364,17 @@ bcftools concat temp_storage/round2*.recode.vcf | bcftools sort -T "$tempdir" | 
 if [[ "$maxld" == "NA" ]]; then
     mv round2.recode.vcf round3.recode.vcf
 else
-	 echo "Filtering by LD"
-     plink2 --vcf round2.recode.vcf \
+	echo "Filtering by LD"
+    plink2 --vcf round2.recode.vcf \
             --id-delim ^ \
             --allow-extra-chr \
             --indep-pairwise 50000 100 $maxld \
             --out thinning
 
     vcftools --vcf round2.recode.vcf \
-             --snps thinning.prune.in \
-             --recode \
-             --out round3
+            --snps thinning.prune.in \
+            --recode \
+            --out round3
 fi
 
 
@@ -385,7 +385,7 @@ if command -v bcftools; then
 	if command -v pbgzip; then
 		pbgzip -c -t 0 round3.recode.vcf > "${vcfout}.gz"
 	else
-    	bcftools view -o "${vcfout}.gz" -O z --no-version round3.recode.vcf
+        bcftools view -o "${vcfout}.gz" -O z --no-version round3.recode.vcf
     fi
     bcftools index "${vcfout}.gz"
 else
@@ -400,10 +400,10 @@ echo "Removed temp directory $tempdir"
 ## Attempt to generate summary statistics using TASSEL
 echo "Generating summary statistics with TASSEL"
 $TASSEL_PL -vcf "${vcfout}.gz" \
-           -GenotypeSummaryPlugin \
-           -endPlugin \
-           -export summary
-        
+        -GenotypeSummaryPlugin \
+        -endPlugin \
+        -export summary
+
 #### Calculate depth statistics ################################################
 vcftools --gzvcf ${vcfout}.gz --site-mean-depth --out ./filtered_VCF        
 

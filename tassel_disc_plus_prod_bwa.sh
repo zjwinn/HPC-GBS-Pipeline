@@ -91,27 +91,27 @@ HELP ARGUMENTS:
     
 echo -e \\n"USAGE EXAMPLE: 
 ${bold}./$script --workdir=~/my_gbs_run \\
-                                   --study=GBS_run01 \\
-                                   --keyfile=GBS_run01_keyfile.txt \\
-                                   --fastq=~/path/to/fastq/files/directory \\
-                                   --ref=~/path/to/ref_genome.fasta \\
-                                   --enzymes=PstI-MspI \\
-                                   --taglength=64 \\
-                                   --minq=0 \\
-                                   --ram=300g \\
-                                   --run-prod \\
-                                   --inclref ${norm}"
+                    --study=GBS_run01 \\
+                    --keyfile=GBS_run01_keyfile.txt \\
+                    --fastq=~/path/to/fastq/files/directory \\
+                    --ref=~/path/to/ref_genome.fasta \\
+                    --enzymes=PstI-MspI \\
+                    --taglength=64 \\
+                    --minq=0 \\
+                    --ram=300g \\
+                    --run-prod \\
+                    --inclref ${norm}"
 
 echo "
 DEPENDENCIES:
-    1) TASSEL 5, with the absolute path to run_pipeline.pl defined as a system
-       variable named TASSEL_PL
-    2) samtools installed in user's PATH
-    3) bgzip (optional) - used to compress output VCF. If not installed,
-       regular gzip is used
-    4) bcftools (optional) - used to index output VCF
-    5) VCFtools (optional) - used to calculate depth statistics at end. If not
-       present, the calculation of depth statistics will be skipped.
+    1)  TASSEL 5, with the absolute path to run_pipeline.pl defined as a system
+        variable named TASSEL_PL
+    2)  samtools installed in user's PATH
+    3)  bgzip (optional) - used to compress output VCF. If not installed,
+        regular gzip is used
+    4)  bcftools (optional) - used to index output VCF
+    5)  VCFtools (optional) - used to calculate depth statistics at end. If not
+        present, the calculation of depth statistics will be skipped.
 
 OUTPUT: 
     The script creates 4 sub-directories in the specified working directory:
@@ -148,7 +148,7 @@ while true; do
             STUDY="$2"
             shift 2
             ;;
-	    -k | --keyfile ) 
+        -k | --keyfile ) 
             KF="$2"
             shift 2
             ;;
@@ -156,15 +156,15 @@ while true; do
             FASTQ="$2" 
             shift 2
             ;;
-	    -r | --ref ) 
+        -r | --ref ) 
             RG="$2" 
             shift 2
             ;;
-	    -e | --enzymes )
+        -e | --enzymes )
             E="$2"
             shift 2
             ;;
-	    -t | --taglength )
+        -t | --taglength )
             TAG_LENGTH="$2"
             shift 2
             ;;
@@ -346,8 +346,8 @@ if [[ $RUN_PROD == "true" ]]; then
     ## If bcftools is installed, bgzip and index, if not, regular gzip.
     ## bgzip should be installed if bcftools is
     if command -v bcftools; then
-	    bgzip -f $OUTFILE
-	    bcftools index -f ${OUTFILE}.gz
+        bgzip -f $OUTFILE
+        bcftools index -f ${OUTFILE}.gz
     else
         gzip -f $OUTFILE
     fi

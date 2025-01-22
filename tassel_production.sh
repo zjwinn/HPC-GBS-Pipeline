@@ -27,7 +27,7 @@ script="$(basename ${BASH_SOURCE[0]})"
 ##
 ## Long arguments specified with --long. Options are comma separated. Same
 ## options syntax as for short options
-opts=$(getopt -o w:d:s:k:f:r::e::t::bh --long workdir:,database:,study:,keyfile:,fastq:,ref::,enzymes::,taglength::,bcf,help -n 'option-parser' -- "$@")
+opts=$(getopt -o w:d:s:k:f:r:x::e::t::bh --long workdir:,database:,study:,keyfile:,fastq:,ref:,ram::,enzymes::,taglength::,bcf,help -n 'option-parser' -- "$@")
 eval set -- "$opts"
 
 ## Set fonts used for Help.
@@ -48,7 +48,7 @@ REQUIRED ARGUMENTS:
 --keyfile=<file>    Path to keyfile, either relative to workdir or absolute
 --fastq=<dir>       Directory for FASTQ files, either relative to workdir or
                     absolute.
-  
+
 OPTIONAL ARGUMENTS:
 
 --ref=<file>            Path to the uncompressed reference genome FASTA file. 
@@ -67,25 +67,26 @@ OPTIONAL ARGUMENTS:
 
 HELP ARGUMENTS:
 --help or -h    Displays this message."
-    
+
 echo -e \\n"USAGE EXAMPLE: 
 ${bold}./$script --workdir=~/my_gbs_run \\
-                                   --database=~/path/to/discovery/db \\
-                                   --study=GBS_run01 \\
-                                   --keyfile=GBS_run01_keyfile.txt \\
-                                   --fastq=~/path/to/fastq/files/directory \\
-                                   --ref=~/path/to/ref_genome.fasta \\
-                                   --enzymes=PstI-MspI \\
-                                   --taglength=64 ${norm}"
+                    --database=~/path/to/discovery/db \\
+                    --study=GBS_run01 \\
+                    --keyfile=GBS_run01_keyfile.txt \\
+                    --fastq=~/path/to/fastq/files/directory \\
+                    --ref=~/path/to/ref_genome.fasta \\
+                    --enzymes=PstI-MspI \\
+                    --taglength=64 \\
+                    --ram=300g ${norm}"
 
 echo "
 DEPENDENCIES:
-    1) TASSEL 5, with the absolute path to run_pipeline.pl defined as a system
-       variable named TASSEL_PL
-    2) samtools - used to create contig lines in output VCF
-    3) bcftools - used to create and index final .vcf.gz or .bcf output file
-    4) VCFtools (optional) - used to calculate depth statistics at end. If not
-       present, the calculation of depth statistics will be skipped.
+    1)  TASSEL 5, with the absolute path to run_pipeline.pl defined as a system
+        variable named TASSEL_PL
+    2)  samtools - used to create contig lines in output VCF
+    3)  bcftools - used to create and index final .vcf.gz or .bcf output file
+    4)  VCFtools (optional) - used to calculate depth statistics at end. If not
+        present, the calculation of depth statistics will be skipped.
 
 OUTPUT: 
     The script creates the directory raw_VCF/ within the specified working
@@ -110,17 +111,53 @@ ext="vcf"
 ## Parse out command-line arguments
 while true; do
     case "$1" in
-        -w | --workdir ) WD="$2"; shift 2;;
-        -d | --database ) DB="$2"; shift 2;;
-        -s | --study ) STUDY="$2"; shift 2;;
-	    -k | --keyfile ) KF="$2"; shift 2;;
-        -f | --fastq ) FASTQ="$2"; shift 2;;
-	    -r | --ref ) RG="$2"; shift 2;;
-	    -e | --enzymes ) E="$2"; shift 2;;
-	    -t | --taglength ) TAG_LENGTH="$2"; shift 2;;
-	-b | --bcf ) ext="bcf"; shift;;
-        -h | --help ) help;;
-        -- ) shift; break;;
+        -w | --workdir )
+            WD="$2" 
+            shift 2
+            ;;
+        -d | --database ) 
+            DB="$2" 
+            shift 2
+            ;;
+        -s | --study ) 
+            STUDY="$2" 
+            shift 2
+            ;;
+        -k | --keyfile )
+            KF="$2" 
+            shift 2
+            ;;
+        -f | --fastq ) 
+            FASTQ="$2" 
+            shift 2
+            ;;
+        -r | --ref ) 
+            RG="$2"
+            shift 2
+            ;;
+        -e | --enzymes ) 
+            E="$2" 
+            shift 2
+            ;;
+        -t | --taglength ) 
+            TAG_LENGTH="$2" 
+            shift 2
+            ;;
+        -x | --ram )
+            RAM="$2"
+            shift 2
+            ;;
+        -b | --bcf ) 
+            ext="bcf" 
+            shift
+            ;;
+        -h | --help ) 
+            help
+            ;;
+        -- ) 
+            shift 
+            break
+            ;;
         * ) echo "Internal error!" break;;
     esac
 done
@@ -277,4 +314,5 @@ rm "$OUTFILE"
 echo "Script finished at:" >> ./logs/discovery.log
 date >> ./logs/discovery.log
 
-exit 0;
+# Commenting this out so that you can pipeline this script
+#exit 0;
