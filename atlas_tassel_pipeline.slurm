@@ -99,7 +99,7 @@ if [ $discovery = "true" ]; then
                                             --taglength="$taglength" \
                                             --ram="$ram"
 
-    # Set discovery location
+    # Set discovery location post discovery creation
     database="$work_dir/database/$study_name.db"
 
 fi
