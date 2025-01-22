@@ -41,7 +41,7 @@ export TASSEL_PL=$(realpath "$run_script")
 # Define necessary variables
 work_dir="/project/90daydata/guedira_seq_map/atlas_gbs_pipeline_test"
 study_name="test_run"
-keyfile="/project/guedira_seq_map/zjwinn_working_directory/HPC-GBS-Pipeline/GAM2023_yr-pop_keyfile.txt"
+keyfile="/project/guedira_seq_map/zjwinn_working_directory/HPC-GBS-Pipeline/softWheat_test_discovery_22991.txt"
 fastq_dir="/project/90daydata/guedira_seq_map/Wheat"
 ref_file="/project/90daydata/guedira_seq_map/Refseq2.1_IWGSC/assembly/iwgsc_refseqv2.1_assembly.fa"
 enzymes="PstI-MspI"
@@ -55,8 +55,8 @@ snphet="0.1"
 maf="0.05"
 removechr="UNKNOWN"
 ncores="40"
-disc_and_prod="false"
-filter="false"
+disc_and_prod="true"
+filter="true"
 impute="true"
 
 # Report current working directory
