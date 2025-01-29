@@ -242,7 +242,7 @@ fi
 ## Run Production
 echo "Production" > ./logs/production.log
 date >> ./logs/production.log
-$TASSEL_PL -fork1 -ProductionSNPCallerPluginV2 -db $DB -e $E -i $FASTQ -k $KF -kmerLength $TAG_LENGTH -o $OUTFILE -endPlugin -runfork1 > ./logs/ProductionSNPCallerPluginV2.log
+$TASSEL_PL -Xms25g -Xmx$RAM -fork1 -ProductionSNPCallerPluginV2 -db $DB -e $E -i $FASTQ -k $KF -kmerLength $TAG_LENGTH -o $OUTFILE -endPlugin -runfork1 > ./logs/ProductionSNPCallerPluginV2.log
 
 
 #### Format the output VCF ####################################################

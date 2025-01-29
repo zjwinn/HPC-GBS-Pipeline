@@ -317,7 +317,7 @@ GetHetCalls() {
 	if [[ "$removechr" == "NA" ]]; then
 		vcftools --vcf round1.recode.vcf \
                     --snps temp_storage/snps_keep_$chrom.txt \
-                    -maf $maf \
+                    --maf $maf \
                     --max-missing $snpmissinv \
                     --min-meanDP $mindep \
                     --max-meanDP $maxdep \

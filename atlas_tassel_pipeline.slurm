@@ -41,7 +41,7 @@ export TASSEL_PL=$(realpath "$run_script")
 # Define necessary variables
 work_dir="/project/90daydata/guedira_seq_map/atlas_gbs_pipeline_test" # Where the pipeline directory will be made
 study_name="test_run" # The name of the project which will be named 
-database="" # This is a path to an existing database, leave blank if discovering and producing in the same run
+database="/home/zachary.winn/guedira_seq_map_90daydata/atlas_gbs_pipeline_test/database/test_run.db" # This is a path to an existing database, leave blank if discovering and producing in the same run
 keyfile="/project/guedira_seq_map/zjwinn_working_directory/HPC-GBS-Pipeline/softWheat_test_discovery_22991.txt" # This is the path to the keyfile
 fastq_dir="/project/90daydata/guedira_seq_map/Wheat" # This is the path to the fastq files
 ref_file="/project/90daydata/guedira_seq_map/Refseq2.1_IWGSC/assembly/iwgsc_refseqv2.1_assembly.fa" # This is the path to the BWA indexed genome
@@ -56,9 +56,9 @@ snphet="0.1" # Maximum heterozygosity per SNP
 maf="0.05" # Minimum allele frequency per SNP
 removechr="UNKNOWN" # Chromosome to remove (usually leave alone)
 ncores="40" # Number of cores for parallele processing (edit if you need more and change nodes)
-discovery="true" # Logical to perform discovery
-production="true" # Logical to perform production
-filter="true" # Logical to perform filter
+discovery="false" # Logical to perform discovery
+production="false" # Logical to perform production
+filter="false" # Logical to perform filter
 impute="true" # Logical to do imputation
 
 # Report current working directory
@@ -178,7 +178,8 @@ if [ $impute = "true" ]; then
                                         --snpmiss=$snpmiss \
                                         --snphet=$snphet \
                                         --maf=$maf \
-                                        --removechr=$removechr \
                                         --ncores=$ncores
 
 fi
+
+exit 0;
