@@ -189,7 +189,7 @@ if [ $impute = "true" ]; then
     cat $work_dir/imp_VCF/original_header.vcf $work_dir/imp_VCF/imputed_body.vcf | bgzip > $work_dir/imp_VCF/${study_name}_production_filt_imp_reheadered.vcf.gz
 
     # Remove head and body
-    rm  $work_dir/imp_VCF/original_header.vcf $work_dir/imp_VCF/imputed_body.vcf 
+    rm $work_dir/imp_VCF/original_header.vcf $work_dir/imp_VCF/imputed_body.vcf 
 
     # Index the final VCF using bcftools
     bcftools index $work_dir/imp_VCF/${study_name}_production_filt_imp_reheadered.vcf.gz
