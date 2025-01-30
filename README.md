@@ -56,27 +56,30 @@ Here are all the options which require modification in the script:
 
 ```bash
 # Define necessary variables
-work_dir="/project/90daydata/guedira_seq_map/atlas_gbs_pipeline_test"
-study_name="test_run"
-keyfile="/project/guedira_seq_map/zjwinn_working_directory/HPC-GBS-Pipeline/GAM2023_yr-pop_keyfile.txt"
-fastq_dir="/project/90daydata/guedira_seq_map/Wheat"
-ref_file="/project/90daydata/guedira_seq_map/Refseq2.1_IWGSC/assembly/iwgsc_refseqv2.1_assembly.fa"
-enzymes="PstI-MspI"
-taglength="85"
-ram="300g"
-taxamiss="0.85"
-taxahet="0.3"
-maxdep="100"
-snpmiss="0.50"
-snphet="0.1"
-maf="0.05"
-removechr="UNKNOWN"
-ncores="40"
-disc_and_prod="true"
-filter="true"
-impute="true"
+work_dir="/project/90daydata/guedira_seq_map/atlas_gbs_pipeline_test" # Where the pipeline directory will be made
+study_name="test_run" # The name of the project which will be named 
+database="/home/zachary.winn/guedira_seq_map_90daydata/atlas_gbs_pipeline_test/database/test_run.db" # This is a path to an existing database, leave blank if discovering and producing in the same run
+keyfile="/project/guedira_seq_map/zjwinn_working_directory/HPC-GBS-Pipeline/softWheat_test_discovery_22991.txt" # This is the path to the keyfile
+fastq_dir="/project/90daydata/guedira_seq_map/Wheat" # This is the path to the fastq files
+ref_file="/project/90daydata/guedira_seq_map/Refseq2.1_IWGSC/assembly/iwgsc_refseqv2.1_assembly.fa" # This is the path to the BWA indexed genome
+enzymes="PstI-MspI" # This is enzymes used for the pipeline (usually leave alone)
+taglength="85" # This is the minimum length of a read (usually leave alone)
+ram="300g" # This is the amount of RAM (edit if you need more and change nodes)
+taxamiss="0.85" # Maximum missing data in a line
+taxahet="0.3" # Maximum heterozygosity in a line
+maxdep="100" # Maximum depth per SNP
+snpmiss="0.50" # Maximum missing data per SNP
+snphet="0.1" # Maximum heterozygosity per SNP
+maf="0.05" # Minimum allele frequency per SNP
+removechr="UNKNOWN" # Chromosome to remove (usually leave alone)
+ncores="40" # Number of cores for parallele processing (edit if you need more and change nodes)
+discovery="false" # Logical to perform discovery
+production="false" # Logical to perform production
+filter="false" # Logical to perform filter
+impute="true" # Logical to do imputation
 
 # Report current working directory
+# Note: make sure to set this every time to the scripts working directory!
 script_dir="/home/zachary.winn/guedira_seq_map/zjwinn_working_directory/HPC-GBS-Pipeline"
 ```
 ### work_dir
@@ -86,6 +89,10 @@ This option represents the directory where you want all relevant outputs to be w
 ### study_name
 
 This option denotes what you want the study name to be. ***BE SURE YOU AVOID SPACES!***
+
+### database
+
+This is the realpath to an exisiting database (.db) of fastq SNPs. Leave this blank if you are running the whole pipeline.
 
 ### keyfile
 
@@ -143,9 +150,13 @@ The chromosome to filter out of a filtered VCF.
 
 The total number of cores available on the computing node.
 
-### disc_and_prod="true"
+### discovery="true"
 
-A logical argument to perform discovery and production. Set to true to perform discovery and production.
+A logical argument to perform discovery. Set to true to perform discovery and production.
+
+## production="true"
+
+A logical argument to perform production. Set to true to perform discovery and production.
 
 ### filter="true"
 
