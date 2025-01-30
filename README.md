@@ -50,6 +50,45 @@ The main script used in this pipeline is [atlas_tassel_pipeline.slurm](https://g
 
 Notice the shbang line at the top denoting that this is a bash script and the following commented information below the shbang line. This information is set to a single standard node on Atlas with 48 cores and 7 days of computation time. If you want more information on available nodes an easy way to generate jobs for atlas [look here](https://www.hpc.msstate.edu/computing/atlas/#ondemand). There may be a point where this script requires greater computational resources and you can look a the previous link to assess your needs. Make sure that when you implement this code that you set the email to your own email!
 
+## Module Load and Pulling Tassel
+
+Here is the section of the script that does this:
+
+```bash
+# Load necessary modules
+module load beagle 
+module load bwa
+module load samtools
+module load bcftools
+module load vcftools
+module load sqlite
+module load bowtie2
+module load bzip2
+
+# Directory and file names
+directory="tassel-5-standalone"
+run_script="tassel-5-standalone/run_pipeline.pl"
+repo_url="https://bitbucket.org/tasseladmin/tassel-5-standalone.git" # Hopefully this stays consistent... Maybe check if this is not correct!
+
+# Check if the directory exists in the current working directory
+if [ ! -d "$directory" ]; then
+    echo "$directory not found. Cloning repository..."
+    git clone "$repo_url"
+else
+    echo "$directory already exists."
+fi
+
+# Define tassel in the user's path
+export TASSEL_PL=$(realpath "$run_script")
+```
+What this section does is it:
+1. Loads modules of all neccessary packages (Note: if you are running this on a PC where you have administrative privilages, just make sure you have these packages previously installed and make sure that Beagle is refered to as "Beagle" in the users PATH)
+2. Checks for Tassel 5 in the current script directory.
+3. If Tassel 5 is not in the current directory, make a clone from GitHub
+4. Export the variable TASSEL_PL to the realpath of the run_pipeline.pl 
+
+Again, note that these steps may change depending on what system you are using. If you are working on a system with no admin privalages and no module load system, then I suggest using a [conda environment](https://www.anaconda.com) with the neccesary packages installed. 
+
 ## Meat and Potatoes of the Script
 
 Here are all the options which require modification in the script:
