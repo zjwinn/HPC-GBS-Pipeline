@@ -154,7 +154,7 @@ The total number of cores available on the computing node.
 
 A logical argument to perform discovery. Set to true to perform discovery and production.
 
-## production="true"
+### production="true"
 
 A logical argument to perform production. Set to true to perform discovery and production.
 
