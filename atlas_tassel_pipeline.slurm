@@ -89,6 +89,9 @@ fi
 # Check for discovery and production
 if [ $discovery = "true" ]; then
 
+    # Echo for log
+    echo "Beginning Discovery: $(date +"%Y-%m-%d %H:%M:%S")"
+
     # Run discovery
     source ./tassel_disc_plus_prod_bwa.sh --workdir="$work_dir" \
                                             --study="$study_name" \
@@ -108,6 +111,9 @@ fi
 cd $script_dir
 
 if [ $production = "true" ]; then
+
+    # Echo for log
+    echo "Beginning Production: $(date +"%Y-%m-%d %H:%M:%S")"
 
     # Validate database existence
     if [ ! -f "$database" ]; then
@@ -134,6 +140,9 @@ cd $script_dir
 # Check for filter
 if [ $filter = "true" ]; then
 
+    # Echo for log
+    echo "Beginning Filtration: $(date +"%Y-%m-%d %H:%M:%S")"
+
     # Make directory
     mkdir $work_dir/filt_VCF
 
@@ -157,6 +166,9 @@ cd $script_dir
 
 if [ $impute = "true" ]; then
 
+    # Echo for log
+    echo "Beginning Imputation: $(date +"%Y-%m-%d %H:%M:%S")"
+
     # Make directory
     mkdir -p $work_dir/imp_VCF
 
@@ -176,6 +188,9 @@ if [ $impute = "true" ]; then
     # Combine the original header with the imputed body and compress
     cat $work_dir/imp_VCF/original_header.vcf $work_dir/imp_VCF/imputed_body.vcf | bgzip > $work_dir/imp_VCF/${study_name}_production_filt_imp_reheadered.vcf.gz
 
+    # Remove head and body
+    rm  $work_dir/imp_VCF/original_header.vcf $work_dir/imp_VCF/imputed_body.vcf 
+
     # Index the final VCF using bcftools
     bcftools index $work_dir/imp_VCF/${study_name}_production_filt_imp_reheadered.vcf.gz
 
@@ -194,4 +209,8 @@ if [ $impute = "true" ]; then
 
 fi
 
+# Echo for log
+echo "Pipeline Complete: $(date +"%Y-%m-%d %H:%M:%S")"
+
+# Exit without error
 exit 0;
