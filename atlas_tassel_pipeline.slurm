@@ -157,7 +157,8 @@ if [ $filter = "true" ]; then
                                         --snphet=$snphet \
                                         --maf=$maf \
                                         --removechr=$removechr \
-                                        --ncores=$ncores
+                                        --ncores=$ncores \
+                                        --ram=$ram
 
 fi
 
@@ -205,7 +206,8 @@ if [ $impute = "true" ]; then
                                     --snphet=$snphet \
                                     --maf=$maf \
                                     --removechr=$removechr \
-                                    --ncores=$ncores
+                                    --ncores=$ncores \
+                                    --ram=$ram
 
 fi
 

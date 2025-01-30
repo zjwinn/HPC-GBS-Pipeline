@@ -47,7 +47,7 @@ script="$(basename ${BASH_SOURCE[0]})"
 ##
 ## Long arguments specified with --long. Options are comma separated. Same
 ## options syntax as for short options
-opts=$(getopt -o w:i:o:s::m::n::a::t::e::b::r::l::d::p::c::h --long workdir:,vcfin:,vcfout:,taxasub::,maf::,snpmiss::,snphet::,taxamiss::,taxahet::,minbp::,removechr::,maxld::,mindep::,maxdep::,ncores::,help -n 'option-parser' -- "$@")
+opts=$(getopt -o w:i:o:s::m::n::a::t::e::b::r::l::d::p::c::x::h --long workdir:,vcfin:,vcfout:,taxasub::,maf::,snpmiss::,snphet::,taxamiss::,taxahet::,minbp::,removechr::,maxld::,mindep::,maxdep::,ncores::,ram::,help -n 'option-parser' -- "$@")
 eval set -- "$opts"
 
 ## Set fonts used for Help.
@@ -67,6 +67,7 @@ REQUIRED ARGUMENTS:
 --vcfout=<file>     Output VCF file path, relative to workdir or absolute path 
                     (output will always be gzipped, or bgzipped and indexed if
                     bgzip and tabix are installed)
+--ram=<int>g        A string which indicates how many gigabytes of RAM to use
 
 OPTIONAL ARGUMENTS - Directories:
 
@@ -162,6 +163,7 @@ while true; do
     -d | --mindep ) mindep="$2"; shift 2;;
     -p | --maxdep ) maxdep="$2"; shift 2;;
     -c | --ncores ) N="$2"; shift 2;;
+    -x | --ram ) RAM="$2"; shift 2;;
     -h | --help ) help;;
     -- ) shift; break;;
     * ) echo "Internal error!" break;;
@@ -399,7 +401,8 @@ echo "Removed temp directory $tempdir"
 
 ## Attempt to generate summary statistics using TASSEL
 echo "Generating summary statistics with TASSEL"
-$TASSEL_PL -vcf "${vcfout}.gz" \
+$TASSEL_PL -Xmx$RAM \
+        -vcf "${vcfout}.gz" \
         -GenotypeSummaryPlugin \
         -endPlugin \
         -export summary
