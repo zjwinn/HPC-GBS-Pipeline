@@ -155,11 +155,10 @@ fi
 # Change directory back to this directory
 cd $script_dir
 
-# Check for impute
 if [ $impute = "true" ]; then
 
     # Make directory
-    mkdir $work_dir/imp_VCF
+    mkdir -p $work_dir/imp_VCF
 
     # Run beagle
     beagle gt=$work_dir/filt_VCF/${study_name}_production_filt.vcf.gz \
@@ -168,18 +167,32 @@ if [ $impute = "true" ]; then
             nthreads=$ncores \
             window=205
 
+    # Extract the original VCF header
+    bcftools view -h $work_dir/filt_VCF/${study_name}_production_filt.vcf.gz > $work_dir/imp_VCF/original_header.vcf
+
+    # Extract the body of the imputed VCF (no header)
+    bcftools view --no-header $work_dir/imp_VCF/${study_name}_production_filt_imp.vcf.gz > $work_dir/imp_VCF/imputed_body.vcf
+
+    # Combine the original header with the imputed body and compress
+    cat $work_dir/imp_VCF/original_header.vcf $work_dir/imp_VCF/imputed_body.vcf | bgzip > $work_dir/imp_VCF/${study_name}_production_filt_imp_reheadered.vcf.gz
+
+    # Index the final VCF using bcftools
+    bcftools index --tbi $work_dir/imp_VCF/${study_name}_production_filt_imp_reheadered.vcf.gz
+
     # Run final filtering
     source ./vcf_filter_parallel.sh --workdir="$work_dir" \
-                                        --vcfin=$work_dir/imp_VCF/${study_name}_production_filt_imp.vcf.gz \
-                                        --vcfout=$work_dir/imp_VCF/${study_name}_production_final.vcf.gz \
-                                        --taxamiss=$taxamiss \
-                                        --taxahet=$taxahet \
-                                        --maxdep=$maxdep \
-                                        --snpmiss=$snpmiss \
-                                        --snphet=$snphet \
-                                        --maf=$maf \
-                                        --ncores=$ncores
+                                    --vcfin=$work_dir/imp_VCF/${study_name}_production_filt_imp_reheadered.vcf.gz \
+                                    --vcfout=$work_dir/imp_VCF/${study_name}_production_final.vcf.gz \
+                                    --taxamiss=$taxamiss \
+                                    --taxahet=$taxahet \
+                                    --maxdep=$maxdep \
+                                    --snpmiss=$snpmiss \
+                                    --snphet=$snphet \
+                                    --maf=$maf \
+                                    --removechr=$removechr \
+                                    --ncores=$ncores
 
 fi
+
 
 exit 0;
