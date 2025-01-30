@@ -177,7 +177,7 @@ if [ $impute = "true" ]; then
     cat $work_dir/imp_VCF/original_header.vcf $work_dir/imp_VCF/imputed_body.vcf | bgzip > $work_dir/imp_VCF/${study_name}_production_filt_imp_reheadered.vcf.gz
 
     # Index the final VCF using bcftools
-    bcftools index --tbi $work_dir/imp_VCF/${study_name}_production_filt_imp_reheadered.vcf.gz
+    bcftools index $work_dir/imp_VCF/${study_name}_production_filt_imp_reheadered.vcf.gz
 
     # Run final filtering
     source ./vcf_filter_parallel.sh --workdir="$work_dir" \
@@ -193,6 +193,5 @@ if [ $impute = "true" ]; then
                                     --ncores=$ncores
 
 fi
-
 
 exit 0;
