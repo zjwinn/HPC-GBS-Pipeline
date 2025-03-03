@@ -301,7 +301,7 @@ bcftools index -f "$FINAL_FILE"
 
 #### Calculate summary stats ##################################################
 
-echo "Genotype summary" >> ./logs/discovery.log
+echo "Genotype summary" >> ./logs/production.log
 date >> ./logs/discovery.log
 $TASSEL_PL -Xmx$RAM \
         -vcf "$OUTFILE" \
@@ -315,8 +315,8 @@ $TASSEL_PL -Xmx$RAM \
 vcftools --gzvcf "$OUTFILE" --site-mean-depth --out raw_VCF/raw_VCF
 
 rm "$OUTFILE"
-echo "Script finished at:" >> ./logs/discovery.log
-date >> ./logs/discovery.log
+echo "Script finished at:" >> ./logs/production.log
+date >> ./logs/production.log
 
 # Commenting this out so that you can pipeline this script
 #exit 0;
