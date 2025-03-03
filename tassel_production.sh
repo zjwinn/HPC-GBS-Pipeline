@@ -303,7 +303,11 @@ bcftools index -f "$FINAL_FILE"
 
 echo "Genotype summary" >> ./logs/discovery.log
 date >> ./logs/discovery.log
-$TASSEL_PL -vcf "$OUTFILE" -GenotypeSummaryPlugin -endPlugin -export raw_VCF/summary
+$TASSEL_PL -Xmx$RAM \
+        -vcf "$OUTFILE" \
+        -GenotypeSummaryPlugin \
+        -endPlugin \
+        -export raw_VCF/summary
 
 
 #### Calculate depth statistics ################################################
