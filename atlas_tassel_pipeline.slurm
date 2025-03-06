@@ -6,7 +6,7 @@
 #SBATCH -N 1                                      
 #SBATCH -n 48                                     
 #SBATCH -t 7-00:00:00                             
-#SBATCH --mail-user=zjwinn@ncsu.edu                                      
+#SBATCH --mail-user=YOUR_EMAIL@YOUR_DOMAIN # BE SURE TO REPLACE THIS                                    
 #SBATCH --mail-type=END                           
 #SBATCH --mail-type=FAIL                          
 #SBATCH -o "stdout.%x.%j.%N"                      
@@ -199,13 +199,8 @@ if [ $impute = "true" ]; then
     source ./vcf_filter_parallel.sh --workdir="$work_dir" \
                                     --vcfin=$work_dir/imp_VCF/${study_name}_production_filt_imp_reheadered.vcf.gz \
                                     --vcfout=$work_dir/imp_VCF/${study_name}_production_final.vcf.gz \
-                                    --taxamiss=$taxamiss \
-                                    --taxahet=$taxahet \
-                                    --maxdep=$maxdep \
-                                    --snpmiss=$snpmiss \
                                     --snphet=$snphet \
                                     --maf=$maf \
-                                    --removechr=$removechr \
                                     --ncores=$ncores \
                                     --ram=$ram
 
